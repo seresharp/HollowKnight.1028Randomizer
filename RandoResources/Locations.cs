@@ -22,7 +22,7 @@ namespace Randomizer
             new NewLocation("Awoken_Dream_Nail", "RestingGrounds_07", new string[0], new string[0], new string[0], new PlayerField<int>[] { new PlayerField<int>("dreamOrbs", 900, false) }, new PlayerField<bool>[0], new string[0], 21f, 10f),
             new ObjectLocation("Vengeful_Spirit", "Crossroads_ShamanTemple", new string[] { "Bone Gate" }, new string[0], new string[0], new PlayerField<int>[0], new PlayerField<bool>[0], new string[0], "Shaman Meeting"),
             new ObjectLocation("Shade_Soul", "Ruins1_31b", new string[0], new string[0], new string[0], new PlayerField<int>[0], new PlayerField<bool>[0], new string[0], "Ruins Shaman"),
-            new ObjectLocation("Desolate_Dive", "Ruins1_24", new string[] { "Roof Collider Battle" }, new string[] { "BG OPEN" }, new string[0], new PlayerField<int>[0], new PlayerField<bool>[0], new string[0], "Quake Item"),
+            new NewLocation("Desolate_Dive", "Ruins1_24", new string[] { "Roof Collider Battle", "Quake Item" }, new string[] { "BG OPEN" }, new string[0], new PlayerField<int>[0], new PlayerField<bool>[0], new string[0], 13.5f, 24.6f),
             new ObjectLocation("Descending_Dark", "Mines_35", new string[0], new string[0], new string[0], new PlayerField<int>[0], new PlayerField<bool>[0], new string[0], "Crystal Shaman"),
             new ObjectLocation("Howling_Wraiths", "Room_Fungus_Shaman", new string[0], new string[0], new string[0], new PlayerField<int>[0], new PlayerField<bool>[0], new string[0], "Scream Item"),
             new ObjectLocation("Abyss_Shriek", "Abyss_12", new string[0], new string[0], new string[0], new PlayerField<int>[] { new PlayerField<int>("screamLevel", 1, false) }, new PlayerField<bool>[0], new string[0], "Scream 2 Get"),

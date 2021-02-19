@@ -357,12 +357,17 @@ namespace Randomizer
                         IEnumerator SoulMasterDead()
                         {
                             yield return new WaitUntil(() => PD.instance.killedMageLord);
-                            desolateDive.transform.SetPositionY(24.6f);
-                            desolateDive.transform.SetPositionX(13.5f);
+                            desolateDive.transform.SetPositionY(13.5f);
+                            desolateDive.transform.SetPositionX(24.6f);
                             desolateDive.SetActive(true);
                         }
 
                         new GameObject().AddComponent<NonBouncer>().StartCoroutine(SoulMasterDead());
+                    }
+
+                    if (PD.instance.killedMageLord)
+                    {
+                        UObject.Destroy(GameObject.Find("Battle Gate (1)"));
                     }
 
                     break;
