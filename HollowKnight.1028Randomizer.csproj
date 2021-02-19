@@ -84,7 +84,7 @@
     <Compile Include="ItemCallbacks.cs" />
     <Compile Include="LocationCallbacks.cs" />
     <Compile Include="ObjectCache.cs" />
-    <Compile Include="Patches\Class1.cs" />
+    <Compile Include="Patches\FlingObject.cs" />
     <Compile Include="Patches\GameManager.cs" />
     <Compile Include="Patches\Language.cs" />
     <Compile Include="Patches\PlayerData.cs" />
