@@ -107,6 +107,7 @@ namespace Randomizer
                 else if (loc is NewLocation newLoc)
                 {
                     obj = ObjectCache.Shiny;
+                    obj.name = "Randomizer Shiny";
                     obj.transform.SetPosition2D(newLoc.X, newLoc.Y);
                     obj.SetActive(true);
 
@@ -265,7 +266,7 @@ namespace Randomizer
                     }
 
                     break;
-                case "Dream_Nailcollection":
+                case "Dream_NailCollection":
                     FSMUtility.LocateFSM(GameObject.Find("Randomizer Shiny"), "Shiny Control").GetState("Finish")
                         .AddAction(new RandomizerExecuteLambda(() => GameManager.instance.ChangeToScene("RestingGrounds_07", "right1", 0f)));
                     break;
@@ -285,6 +286,42 @@ namespace Randomizer
                     gateSlam.RemoveActionsOfType<SetPlayerDataBool>();
                     gateSlam.RemoveActionsOfType<CallMethodProper>();
                     gateSlam.RemoveActionsOfType<SendMessage>();
+                    break;
+                case "RestingGrounds_04":
+                    // Patch dream nail plaque to look for randomized item
+                    if (!PD.instance.itemPlacements.Any(p => p.Value == "Dream_Nail"))
+                    {
+                        break;
+                    }
+
+                    foreach (FsmState state in
+                        new[]
+                        {
+                            new[] { "Binding Shield Activate", "FSM", "Check" },
+                            new[] { "Dreamer Plaque Inspect", "Conversation Control", "End" },
+                            new[] { "Dreamer Scene 2", "Control", "Init" },
+                            new[] { "PreDreamnail", "FSM", "Check" },
+                            new[] { "PostDreamnail", "FSM", "Check" }
+                        }.Select(s => GameObject.Find(s[0]).LocateMyFSM(s[1]).GetState(s[2])))
+                    {
+                        PlayerDataBoolTest test = state.GetActionOfType<PlayerDataBoolTest>();
+                        FsmEvent isTrue = test.isTrue;
+                        FsmEvent isFalse = test.isFalse;
+
+                        state.RemoveActionsOfType<PlayerDataBoolTest>();
+                        state.AddFirstAction(new RandomizerExecuteLambda(() =>
+                        {
+                            if (PD.instance.obtainedLocations.Contains("Dream_Nail"))
+                            {
+                                state.Fsm.Event(isTrue);
+                            }
+                            else
+                            {
+                                state.Fsm.Event(isFalse);
+                            }
+                        }));
+                    }
+
                     break;
                 case "RestingGrounds_07":
                     GameObject.Find("Dream Moth").transform.Translate(new Vector3(-5f, 0f));
