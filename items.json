@@ -1,0 +1,65 @@
+[
+  {
+    "Id": "Dash",
+    "Stages": [
+      {
+        "BoolActions": [
+          {
+            "FieldName": "hasDash",
+            "Value": true
+          },
+          {
+            "FieldName": "canDash",
+            "Value": true
+          }
+        ],
+        "IntActions": null,
+        "FsmEvents": null,
+        "Popup": {
+          "Name": "UI.INV_NAME_DASH",
+          "Sprite": "Prompts.Dash1",
+          "Take": "Prompts.GET_ITEM_INTRO1",
+          "Button": "Randomizer.POPUP_BUTTON",
+          "Description1": "Prompts.GET_DASH_1",
+          "Description2": "Prompts.GET_DASH_2"
+        },
+        "Shop": {
+          "Name": "INV_NAME_DASH",
+          "Sprite": "ShopIcons.Dash1",
+          "Description": "INV_DESC_DASH",
+          "MinCost": 200,
+          "MaxCost": 400
+        }
+      },
+      {
+        "BoolActions": [
+          {
+            "FieldName": "hasShadowDash",
+            "Value": true
+          },
+          {
+            "FieldName": "canShadowDash",
+            "Value": true
+          }
+        ],
+        "IntActions": null,
+        "FsmEvents": null,
+        "Popup": {
+          "Name": "UI.INV_NAME_SHADOWDASH",
+          "Sprite": "Prompts.Dash2",
+          "Take": "Prompts.GET_ITEM_INTRO7",
+          "Button": "Randomizer.POPUP_BUTTON",
+          "Description1": "Prompts.GET_SHADOWDASH_1",
+          "Description2": "Prompts.GET_SHADOWDASH_2"
+        },
+        "Shop": {
+          "Name": "INV_NAME_SHADOWDASH",
+          "Sprite": "ShopIcons.Dash2",
+          "Description": "INV_DESC_SHADOWDASH",
+          "MinCost": 500,
+          "MaxCost": 800
+        }
+      }
+    ]
+  }
+]
