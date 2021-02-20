@@ -3,11 +3,11 @@ using HutongGames.PlayMaker;
 
 namespace Randomizer.FsmStateActions
 {
-    internal class RandomizerExecuteLambda : FsmStateAction
+    internal class ExecuteLambda : FsmStateAction
     {
         private readonly Action _method;
 
-        public RandomizerExecuteLambda(Action method)
+        public ExecuteLambda(Action method)
         {
             _method = method;
         }

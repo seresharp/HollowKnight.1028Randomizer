@@ -87,5 +87,15 @@ namespace Randomizer.Util
 
             self.Actions = actions;
         }
+
+        public static void ForceTransitions(this PlayMakerFSM self, params string[] stateNames)
+        {
+            for (int i = 0; i < stateNames.Length - 1; i++)
+            {
+                FsmState state = self.GetState(stateNames[i]);
+                state.ClearTransitions();
+                state.AddTransition("FINISHED", stateNames[i + 1]);
+            }
+        }
     }
 }

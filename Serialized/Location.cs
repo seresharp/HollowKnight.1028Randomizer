@@ -1,4 +1,13 @@
-﻿using System.Text;
+﻿using System;
+using System.Collections;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using Randomizer.Util;
+using UnityEngine;
+
+using PD = Randomizer.Patches.PlayerData;
+using UObject = UnityEngine.Object;
 
 namespace Randomizer.Serialized
 {
@@ -24,6 +33,99 @@ namespace Randomizer.Serialized
             RequiredInts = requiredInts;
             RequiredBools = requiredBools;
             RequiredCallbacks = requiredCallbacks;
+        }
+
+        public bool HasRequired()
+        {
+            foreach (PlayerField<bool> pf in RequiredBools)
+            {
+                if (!pf.CheckValue())
+                {
+                    return false;
+                }
+            }
+
+            foreach (PlayerField<int> pf in RequiredInts)
+            {
+                if (!pf.CheckValue(true))
+                {
+                    return false;
+                }
+            }
+
+            foreach (string callName in RequiredCallbacks)
+            {
+                int dot = callName.IndexOf('.');
+                Type t = Type.GetType(nameof(Randomizer) + "." + callName.Substring(0, dot));
+                MethodInfo method = t.GetMethod(callName.Substring(dot + 1));
+
+                if (!(bool)method.Invoke(null, new[] { this }))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        public void SceneLoaded()
+        {
+            foreach (string objName in DestroyObjects)
+            {
+                static IEnumerator DeleteObject(string objName)
+                {
+                    while (true)
+                    {
+                        yield return null;
+                        GameObject obj = GameObject.Find(objName);
+                        if (obj != null)
+                        {
+                            UObject.Destroy(obj);
+                            break;
+                        }
+                    }
+                }
+
+                DeleteObject(objName).RunCoroutine();
+            }
+
+            foreach (string callback in RandoCallbacks)
+            {
+                int dot = callback.IndexOf('.');
+                Type t = Type.GetType(nameof(Randomizer) + "." + callback.Substring(0, dot));
+                MethodInfo method = t.GetMethod(callback.Substring(dot + 1));
+
+                method.Invoke(null, new[] { this });
+            }
+        }
+
+        public void Collect()
+        {
+            // Set obtained
+            PD.instance.obtainedLocations.Add(Id);
+
+            // Run events
+            static IEnumerator SendEvents(string[] events)
+            {
+                foreach (string e in events)
+                {
+                    PlayMakerFSM.BroadcastEvent(e);
+                    yield return null;
+                }
+            }
+
+            SendEvents(FsmEvents).RunCoroutine();
+
+            // Remove geo
+            int geo = RequiredInts
+                .Where(i => i.FieldName == nameof(PlayerData.geo))
+                .Select(i => i.Value)
+                .Sum();
+
+            if (geo > 0)
+            {
+                HeroController.instance.TakeGeo(geo);
+            }
         }
     }
 

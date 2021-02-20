@@ -32,6 +32,7 @@ namespace Randomizer
             }
         }
 
+        [YNDialogue.Name("Complete the root")]
         public static bool CheckWhisperingRoot(Location location)
             => PlayerData.instance.scenesEncounteredDreamPlantC.Contains(location.Scene);
     }

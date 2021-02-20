@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using HutongGames.PlayMaker;
 using HutongGames.PlayMaker.Actions;
 using Randomizer.FsmStateActions;
@@ -27,9 +24,21 @@ namespace Randomizer
                 string itemId = pair.Key.Substring(0, pair.Key.IndexOf('.'));
                 string locId = pair.Value;
 
-                Item item = RandoResources.Items.First(i => i.Id == itemId);
+                Item item = RandoResources.Items.FirstOrDefault(i => i.Id == itemId);
                 Location loc = RandoResources.Locations.FirstOrDefault(l => l.Id == locId)
-                    ?? RandoResources.Shops.First(s => s.Id == locId);
+                    ?? RandoResources.Shops.FirstOrDefault(s => s.Id == locId);
+
+                if (item == null)
+                {
+                    Debug.Log("[Randomizer] Failed to find item " + itemId + " in resources, skipping");
+                    continue;
+                }
+
+                if (loc == null)
+                {
+                    Debug.Log("[Randomizer] Failed to find location " + locId + " in resources, skipping");
+                    continue;
+                }
 
                 if (loc.Scene != scene)
                 {
@@ -38,40 +47,12 @@ namespace Randomizer
 
                 Debug.Log("[Randomizer] Patching item: " + locId + " -> " + itemId);
 
-                foreach (string objName in loc.DestroyObjects)
-                {
-                    IEnumerator DeleteObject()
-                    {
-                        string oldScene = scene;
-                        while (GameManager.instance.sceneName == oldScene)
-                        {
-                            yield return null;
-                            GameObject obj = GameObject.Find(objName);
-                            if (obj != null)
-                            {
-                                UObject.Destroy(obj);
-                                break;
-                            }
-                        }
-                    }
+                loc.SceneLoaded();
 
-                    GameManager.instance.StartCoroutine(DeleteObject());
-                }
-
-                foreach (string callback in loc.RandoCallbacks)
-                {
-                    int dot = callback.IndexOf('.');
-                    Type t = Type.GetType(nameof(Randomizer) + "." + callback.Substring(0, dot));
-                    MethodInfo method = t.GetMethod(callback.Substring(dot + 1));
-
-                    method.Invoke(null, new[] { loc });
-                }
-
-                GameObject obj;
                 PlayMakerFSM fsm;
                 if (loc is ObjectLocation objLoc)
                 {
-                    obj = USceneManager.GetSceneByName(scene).FindGameObject(objLoc.MainObject);
+                    GameObject obj = USceneManager.GetSceneByName(scene).FindGameObject(objLoc.MainObject);
                     if (obj.name == "Shop Menu")
                     {
                         if (!shopItems.TryGetValue(obj, out List<string> objShopItems))
@@ -84,143 +65,33 @@ namespace Randomizer
                         continue;
                     }
 
-                    fsm = obj.LocateMyFSM("Shiny Control");
-                    if (fsm == null)
-                    {
-                        GameObject shiny = ObjectCache.Shiny;
-                        shiny.name = "Randomizer Shiny";
-                        if (obj.transform.parent != null)
-                        {
-                            shiny.transform.SetParent(obj.transform.parent);
-                        }
-
-                        shiny.transform.position = obj.transform.position;
-                        shiny.transform.localPosition = obj.transform.localPosition;
-                        shiny.SetActive(obj.activeSelf);
-
-                        UObject.Destroy(obj);
-
-                        obj = shiny;
-                        fsm = shiny.LocateMyFSM("Shiny Control");
-                    }
+                    fsm = ShinyUtil.GetShiny(obj);
                 }
                 else if (loc is NewLocation newLoc)
                 {
-                    obj = ObjectCache.Shiny;
-                    obj.name = "Randomizer Shiny";
-                    obj.transform.SetPosition2D(newLoc.X, newLoc.Y);
-                    obj.SetActive(true);
-
-                    fsm = obj.LocateMyFSM("Shiny Control");
+                    fsm = ShinyUtil.CreateNewShiny(newLoc.X, newLoc.Y);
                 }
                 else
                 {
                     continue;
                 }
 
-                FsmState fling = fsm.GetState("Fling?");
-                fling.ClearTransitions();
-                fling.AddTransition("FINISHED", "Fling R");
-                FlingObject flingObj = fsm.GetState("Fling R").GetActionsOfType<FlingObject>()[0];
-                flingObj.angleMin = flingObj.angleMax = 270;
-                flingObj.speedMin = flingObj.speedMax = 0.1f;
+                // Begin patching shiny item fsm from vanilla -> rando
+                ShinyUtil.CancelFling(fsm);
+                ShinyUtil.SetLocationId(fsm, locId);
+                fsm.ForceTransitions("Charm?", "Trink Flash", "Store Key");
 
-                // COPY/PASTED ChangeShinyIntoItem
-                FsmState pdBool = fsm.GetState("PD Bool?");
-                FsmState charm = fsm.GetState("Charm?");
-                FsmState trinkFlash = fsm.GetState("Trink Flash");
-                FsmState giveTrinket = fsm.GetState("Store Key"); // This path works well for our changes
-
-                // Remove actions that stop shiny from spawning
-                pdBool.RemoveActionsOfType<PlayerDataBoolTest>();
-                pdBool.RemoveActionsOfType<StringCompare>();
-
-                // Add our own check to stop the shiny from being grabbed twice
-                pdBool.AddAction(new RandomizerExecuteLambda(() =>
-                {
-                    if (PD.instance.obtainedLocations.Contains(locId))
-                    {
-                        fsm.SendEvent("COLLECTED");
-                    }
-                }));
-
-                // Force the FSM to follow the path for the correct trinket
-                charm.ClearTransitions();
-                charm.AddTransition("FINISHED", "Trink Flash");
-                trinkFlash.ClearTransitions();
-                fsm.GetState("Trinket Type").ClearTransitions();
-                trinkFlash.AddTransition("FINISHED", "Store Key");
-
+                // Replace giving the store key with giving our new item
+                FsmState giveTrinket = fsm.GetState("Store Key");
                 giveTrinket.RemoveActionsOfType<SetPlayerDataBool>();
-                giveTrinket.AddFirstAction(new RandomizerExecuteLambda(() =>
-                {
-                    PD.instance.obtainedLocations.Add(locId);
+                giveTrinket.AddFirstAction(new CollectItem(loc, item));
 
-                    IEnumerator SendEvents(string[] events)
-                    {
-                        foreach (string e in events)
-                        {
-                            PlayMakerFSM.BroadcastEvent(e);
-                            yield return null;
-                        }
-                    }
+                // Set the sprite/text on the popup to make it obvious if the above fails
+                giveTrinket.GetActionOfType<GetLanguageString>().convName = "IT BROKE";
+                giveTrinket.GetActionOfType<SetSpriteRendererSprite>().sprite = Sprites.Get("NullTex");
 
-                    GameManager.instance.StartCoroutine(SendEvents(loc.FsmEvents));
-
-                    // Get next stage
-                    if (!item.TryCollect(out ItemStage stage))
-                    {
-                        return;
-                    }
-
-                    // Set icon/name on fsm
-                    giveTrinket.GetActionsOfType<GetLanguageString>().First().convName = stage.Popup.Name;
-                    giveTrinket.GetActionsOfType<SetSpriteRendererSprite>().First().sprite = Sprites.Get(stage.Popup.IsBig ? stage.Shop.Sprite : stage.Popup.Sprite);
-                }));
-
-                giveTrinket.GetActionsOfType<GetLanguageString>().First().convName = "IT BROKE";
-                giveTrinket.GetActionsOfType<SetSpriteRendererSprite>().First().sprite = Sprites.Get("NullTex");
-
-                if (loc.RequiredBools.Length > 0 || loc.RequiredInts.Length > 0 || loc.RequiredCallbacks.Length > 0)
-                {
-                    MethodInfo[] reqCalls = loc.RequiredCallbacks
-                        .Select(s => Type.GetType("Randomizer." + s.Substring(0, s.IndexOf('.'))).GetMethod(s.Substring(s.IndexOf('.') + 1)))
-                        .ToArray();
-
-                    string[] reqText = loc.RequiredBools.Select(b => b.FieldName + " = " + b.Value)
-                        .Concat(loc.RequiredInts.Select(i => i.FieldName + " >= " + i.Value))
-                        .Concat(reqCalls.Select(c => c.Name))
-                        .ToArray();
-
-                    YNDialogue.AddToShiny(fsm, item.Id + ": " + string.Join(", ", reqText), () =>
-                    {
-                        foreach (PlayerField<bool> pf in loc.RequiredBools)
-                        {
-                            if (!pf.CheckValue())
-                            {
-                                return false;
-                            }
-                        }
-
-                        foreach (PlayerField<int> pf in loc.RequiredInts)
-                        {
-                            if (!pf.CheckValue(true))
-                            {
-                                return false;
-                            }
-                        }
-
-                        foreach (MethodInfo call in reqCalls)
-                        {
-                            if (!(bool)call.Invoke(null, new[] { loc }))
-                            {
-                                return false;
-                            }
-                        }
-
-                        return true;
-                    });
-                }
+                // Add dialogue box if necessary
+                YNDialogue.AddToShiny(fsm, loc, item);
 
                 Debug.Log("[Randomizer] Patched item: " + locId + " -> " + itemId);
             }
@@ -252,23 +123,13 @@ namespace Randomizer
                 case "Crossroads_09":
                     if (GameObject.Find("Randomizer Shiny") is GameObject mawlekShard)
                     {
-                        mawlekShard.transform.SetPositionY(100f);
-                        mawlekShard.SetActive(false);
-                        IEnumerator MawlekDead()
-                        {
-                            yield return new WaitUntil(() => PD.instance.killedMawlek);
-                            mawlekShard.transform.SetPositionY(10f);
-                            mawlekShard.transform.SetPositionX(61.5f);
-                            mawlekShard.SetActive(true);
-                        }
-
-                        new GameObject().AddComponent<NonBouncer>().StartCoroutine(MawlekDead());
+                        ShinyUtil.WaitForPDBool(mawlekShard, nameof(PD.killedMawlek)).RunCoroutine();
                     }
 
                     break;
                 case "Dream_NailCollection":
                     FSMUtility.LocateFSM(GameObject.Find("Randomizer Shiny"), "Shiny Control").GetState("Finish")
-                        .AddAction(new RandomizerExecuteLambda(() => GameManager.instance.ChangeToScene("RestingGrounds_07", "right1", 0f)));
+                        .AddAction(new ExecuteLambda(() => GameManager.instance.ChangeToScene("RestingGrounds_07", "right1", 0f)));
                     break;
                 case "Fungus1_04":
                     if (!Ref.PD.hornet1Defeated)
@@ -309,7 +170,7 @@ namespace Randomizer
                         FsmEvent isFalse = test.isFalse;
 
                         state.RemoveActionsOfType<PlayerDataBoolTest>();
-                        state.AddFirstAction(new RandomizerExecuteLambda(() =>
+                        state.AddFirstAction(new ExecuteLambda(() =>
                         {
                             if (PD.instance.obtainedLocations.Contains("Dream_Nail"))
                             {
@@ -345,24 +206,13 @@ namespace Randomizer
                     break;
                 case "Room_Sly_Storeroom":
                     FsmState slyFinish = FSMUtility.LocateFSM(GameObject.Find("Randomizer Shiny"), "Shiny Control").GetState("Finish");
-                    slyFinish.AddAction(new RandomizerExecuteLambda(() => PD.instance.gotSlyCharm = true));
-                    slyFinish.AddAction(new RandomizerExecuteLambda(() => GameManager.instance.ChangeToScene("Town", "door_sly", 0f)));
+                    slyFinish.AddAction(new ExecuteLambda(() => PD.instance.gotSlyCharm = true));
+                    slyFinish.AddAction(new ExecuteLambda(() => GameManager.instance.ChangeToScene("Town", "door_sly", 0f)));
                     break;
                 case "Ruins1_24":
                     if (GameObject.Find("Randomizer Shiny") is GameObject desolateDive)
                     {
-                        desolateDive.transform.SetPositionY(100f);
-                        desolateDive.SetActive(false);
-
-                        IEnumerator SoulMasterDead()
-                        {
-                            yield return new WaitUntil(() => PD.instance.killedMageLord);
-                            desolateDive.transform.SetPositionY(13.5f);
-                            desolateDive.transform.SetPositionX(24.6f);
-                            desolateDive.SetActive(true);
-                        }
-
-                        new GameObject().AddComponent<NonBouncer>().StartCoroutine(SoulMasterDead());
+                        ShinyUtil.WaitForPDBool(desolateDive, nameof(PD.killedMageLord)).RunCoroutine();
                     }
 
                     if (PD.instance.killedMageLord)
@@ -388,10 +238,10 @@ namespace Randomizer
 
                     break;
                 case "Room_Colosseum_Bronze":
-                    GameObject.Find("Colosseum Manager").LocateMyFSM("Geo Pool").GetState("Open Gates").AddFirstAction(new RandomizerExecuteLambda(() => PD.instance.colosseumBronzeCompleted = true));
+                    GameObject.Find("Colosseum Manager").LocateMyFSM("Geo Pool").GetState("Open Gates").AddFirstAction(new ExecuteLambda(() => PD.instance.colosseumBronzeCompleted = true));
                     break;
                 case "Room_Colosseum_Silver":
-                    GameObject.Find("Colosseum Manager").LocateMyFSM("Geo Pool").GetState("Open Gates").AddFirstAction(new RandomizerExecuteLambda(() => PD.instance.colosseumSilverCompleted = true));
+                    GameObject.Find("Colosseum Manager").LocateMyFSM("Geo Pool").GetState("Open Gates").AddFirstAction(new ExecuteLambda(() => PD.instance.colosseumSilverCompleted = true));
                     break;
                 case "Town":
                     UObject.Destroy(GameObject.Find("Set Sly Basement Closed"));

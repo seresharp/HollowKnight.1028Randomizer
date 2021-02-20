@@ -26,17 +26,21 @@ namespace Randomizer.Patches
             obtainedLocations = new List<string>();
             itemObtainedCounts = new SerializableIntDictionary();
             itemCosts = new SerializableIntDictionary();
+        }
+
+        public void StartNewGame()
+        {
+            itemPlacements = new SerializableStringDictionary();
+            obtainedLocations = new List<string>();
+            itemObtainedCounts = new SerializableIntDictionary();
+            itemCosts = new SerializableIntDictionary();
 
             hasCharm = true;
             unchainedHollowKnight = true;
-            encounteredMimicSpider = true;
             infectedKnightEncountered = true;
             mageLordEncountered = true;
             mageLordEncountered_2 = true;
-        }
 
-        public void RandomizeItems()
-        {
             Randomization.RandomizeItems(itemPlacements, itemCosts);
         }
 

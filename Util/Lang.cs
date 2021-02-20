@@ -205,9 +205,6 @@ namespace Randomizer.Util
             Add("MainMenu", "DESC_VSYNC", "Leave on to make the game unplayable.");
             Add("Titles", "DIRTMOUTH_MAIN", "Elderbug");
             Add("Titles", "DIRTMOUTH_SUB", "is a cool dude");
-            Add("Jiji", "HIVE", "Mantis Claw is... somewhere");
-            Add("Prices", "TUK_RANCIDEGG_MIN", "80");
-            Add("Prices", "TUK_RANCIDEGG_MAX", "80");
         }
     }
 }

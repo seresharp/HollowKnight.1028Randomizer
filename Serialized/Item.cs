@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Reflection;
 using System.Text;
+using Randomizer.Util;
 
 using PD = Randomizer.Patches.PlayerData;
 
@@ -52,11 +53,6 @@ namespace Randomizer.Serialized
                 return false;
             }
 
-            if (!PD.instance.itemObtainedCounts.TryGetValue(Id, out int itemCount))
-            {
-                itemCount = 0;
-            }
-
             // Execute stage actions
             foreach (PlayerField<bool> pf in givenStage.BoolActions)
             {
@@ -69,10 +65,15 @@ namespace Randomizer.Serialized
             }
 
             // Increment obtained counter
+            if (!PD.instance.itemObtainedCounts.TryGetValue(Id, out int itemCount))
+            {
+                itemCount = 0;
+            }
+
             PD.instance.itemObtainedCounts[Id] = itemCount + 1;
 
             // Item fsm events
-            IEnumerator SendEvents(string[] events)
+            static IEnumerator SendEvents(string[] events)
             {
                 foreach (string e in events)
                 {
@@ -81,7 +82,7 @@ namespace Randomizer.Serialized
                 }
             }
 
-            GameManager.instance.StartCoroutine(SendEvents(givenStage.FsmEvents));
+            SendEvents(givenStage.FsmEvents).RunCoroutine();
 
             // Code callbacks
             foreach (string callback in givenStage.RandoCallbacks)

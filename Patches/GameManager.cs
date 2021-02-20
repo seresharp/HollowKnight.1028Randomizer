@@ -35,7 +35,7 @@ namespace Randomizer.Patches
 			this.entryGateName = "top1";
 			this.SetState(GameState.PLAYING);
 			this.ui.ConfigureMenu();
-			PlayerData.instance.RandomizeItems();
+			PlayerData.instance.StartNewGame();
 			this.LoadScene("Tutorial_01");
 		}
 

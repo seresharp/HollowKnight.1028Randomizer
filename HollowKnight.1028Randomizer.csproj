@@ -80,7 +80,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\BigItemPopup.cs" />
-    <Compile Include="FsmStateActions\RandomizerExecuteLambda.cs" />
+    <Compile Include="FsmStateActions\CheckLocationObtained.cs" />
+    <Compile Include="FsmStateActions\CollectItem.cs" />
+    <Compile Include="FsmStateActions\ExecuteLambda.cs" />
     <Compile Include="ItemCallbacks.cs" />
     <Compile Include="LocationCallbacks.cs" />
     <Compile Include="ObjectCache.cs" />
@@ -105,11 +107,13 @@
     <Compile Include="Serialized\SerializableStringDictionary.cs" />
     <Compile Include="ShopModifier.cs" />
     <Compile Include="Util\CavasUtil.cs" />
+    <Compile Include="Util\IEnumeratorExtensions.cs" />
     <Compile Include="Util\Fonts.cs" />
     <Compile Include="Util\Lang.cs" />
     <Compile Include="Util\PlayMakerExtensions.cs" />
     <Compile Include="Util\Ref.cs" />
     <Compile Include="Util\SceneExtensions.cs" />
+    <Compile Include="Util\ShinyUtil.cs" />
     <Compile Include="Util\Sprites.cs" />
     <Compile Include="YNDialogue.cs" />
   </ItemGroup>
