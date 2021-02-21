@@ -29,11 +29,8 @@
     <None Remove="Resources\Charms\21.png" />
     <None Remove="Resources\Charms\22.png" />
     <None Remove="Resources\Charms\23.png" />
-    <None Remove="Resources\Charms\23_G.png" />
     <None Remove="Resources\Charms\24.png" />
-    <None Remove="Resources\Charms\24_G.png" />
     <None Remove="Resources\Charms\25.png" />
-    <None Remove="Resources\Charms\25_G.png" />
     <None Remove="Resources\Charms\26.png" />
     <None Remove="Resources\Charms\27.png" />
     <None Remove="Resources\Charms\28.png" />
@@ -49,11 +46,7 @@
     <None Remove="Resources\Charms\36_L.png" />
     <None Remove="Resources\Charms\36_R.png" />
     <None Remove="Resources\Charms\36_Void.png" />
-    <None Remove="Resources\Charms\37.png" />
-    <None Remove="Resources\Charms\38.png" />
-    <None Remove="Resources\Charms\39.png" />
     <None Remove="Resources\Charms\4.png" />
-    <None Remove="Resources\Charms\40.png" />
     <None Remove="Resources\Charms\5.png" />
     <None Remove="Resources\Charms\6.png" />
     <None Remove="Resources\Charms\7.png" />
@@ -169,11 +162,8 @@
     <EmbeddedResource Include="Resources\Charms\21.png" />
     <EmbeddedResource Include="Resources\Charms\22.png" />
     <EmbeddedResource Include="Resources\Charms\23.png" />
-    <EmbeddedResource Include="Resources\Charms\23_G.png" />
     <EmbeddedResource Include="Resources\Charms\24.png" />
-    <EmbeddedResource Include="Resources\Charms\24_G.png" />
     <EmbeddedResource Include="Resources\Charms\25.png" />
-    <EmbeddedResource Include="Resources\Charms\25_G.png" />
     <EmbeddedResource Include="Resources\Charms\26.png" />
     <EmbeddedResource Include="Resources\Charms\27.png" />
     <EmbeddedResource Include="Resources\Charms\28.png" />
@@ -189,11 +179,7 @@
     <EmbeddedResource Include="Resources\Charms\36_L.png" />
     <EmbeddedResource Include="Resources\Charms\36_R.png" />
     <EmbeddedResource Include="Resources\Charms\36_Void.png" />
-    <EmbeddedResource Include="Resources\Charms\37.png" />
-    <EmbeddedResource Include="Resources\Charms\38.png" />
-    <EmbeddedResource Include="Resources\Charms\39.png" />
     <EmbeddedResource Include="Resources\Charms\4.png" />
-    <EmbeddedResource Include="Resources\Charms\40.png" />
     <EmbeddedResource Include="Resources\Charms\5.png" />
     <EmbeddedResource Include="Resources\Charms\6.png" />
     <EmbeddedResource Include="Resources\Charms\7.png" />

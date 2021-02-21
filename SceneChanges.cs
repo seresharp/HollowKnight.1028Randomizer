@@ -16,90 +16,8 @@ namespace Randomizer
     {
         public static void PatchScene(string scene)
         {
-            Dictionary<GameObject, List<string>> shopItems = new Dictionary<GameObject, List<string>>();
-
-            foreach (KeyValuePair<string, string> pair in RandomizerMod.Instance.ItemPlacements)
-            {
-                string itemId = pair.Key.Substring(0, pair.Key.IndexOf('.'));
-                string locId = pair.Value;
-
-                Item item = RandoResources.Items.FirstOrDefault(i => i.Id == itemId);
-                Location loc = RandoResources.Locations.FirstOrDefault(l => l.Id == locId)
-                    ?? RandoResources.Shops.FirstOrDefault(s => s.Id == locId);
-
-                if (item == null)
-                {
-                    RandomizerMod.Instance.Log("Failed to find item " + itemId + " in resources, skipping");
-                    continue;
-                }
-
-                if (loc == null)
-                {
-                    RandomizerMod.Instance.Log("Failed to find location " + locId + " in resources, skipping");
-                    continue;
-                }
-
-                if (loc.Scene != scene)
-                {
-                    continue;
-                }
-
-                RandomizerMod.Instance.Log("Patching item: " + locId + " -> " + itemId);
-
-                loc.SceneLoaded();
-
-                PlayMakerFSM fsm;
-                if (loc is ObjectLocation objLoc)
-                {
-                    GameObject obj = USceneManager.GetSceneByName(scene).FindGameObject(objLoc.MainObject);
-                    if (obj.name == "Shop Menu")
-                    {
-                        if (!shopItems.TryGetValue(obj, out List<string> objShopItems))
-                        {
-                            objShopItems = new List<string>();
-                            shopItems[obj] = objShopItems;
-                        }
-
-                        objShopItems.Add(pair.Key);
-                        continue;
-                    }
-
-                    fsm = ShinyUtil.GetShiny(obj);
-                }
-                else if (loc is NewLocation newLoc)
-                {
-                    fsm = ShinyUtil.CreateNewShiny(newLoc.X, newLoc.Y);
-                }
-                else
-                {
-                    continue;
-                }
-
-                // Begin patching shiny item fsm from vanilla -> rando
-                ShinyUtil.CancelFling(fsm);
-                ShinyUtil.SetLocationId(fsm, locId);
-                fsm.ForceTransitions("Charm?", "Trink Flash", "Store Key");
-
-                // Replace giving the store key with giving our new item
-                FsmState giveTrinket = fsm.GetState("Store Key");
-                giveTrinket.RemoveActionsOfType<SetPlayerDataBool>();
-                giveTrinket.AddFirstAction(new CollectItem(loc, item));
-
-                // Set the sprite/text on the popup to make it obvious if the above fails
-                giveTrinket.GetActionOfType<GetLanguageString>().convName = "IT BROKE";
-                giveTrinket.GetActionOfType<SetSpriteRendererSprite>().sprite = Sprites.Get("NullTex");
-
-                // Add dialogue box if necessary
-                YNDialogue.AddToShiny(fsm, loc, item);
-
-                RandomizerMod.Instance.Log("Patched item: " + locId + " -> " + itemId);
-            }
-
-            // Shop items
-            foreach (KeyValuePair<GameObject, List<string>> pair in shopItems)
-            {
-                ShopModifier.SetShopItems(pair.Key, pair.Value.ToArray());
-            }
+            ApplyHints(scene);
+            EditRandomizedItems(scene);
 
             switch (scene)
             {
@@ -245,6 +163,125 @@ namespace Randomizer
                 case "Town":
                     UObject.Destroy(GameObject.Find("Set Sly Basement Closed"));
                     break;
+            }
+        }
+
+        private static void ApplyHints(string scene)
+        {
+            switch (scene)
+            {
+                case "Abyss_05":
+                    ApplyHint("King_Fragment", "Lore Tablets", "DUSK_KNIGHT_CORPSE");
+                    break;
+                case "Room_Colosseum_01":
+                    ApplyHint("Charm_Notch-Colosseum", "Prompts", "TRIAL_BOARD_BRONZE");
+                    ApplyHint("Pale_Ore-Colosseum", "Prompts", "TRIAL_BOARD_SILVER");
+                    break;
+                case "Room_Mansion":
+                    ApplyHint("Mask_Shard-Grey_Mourner", "Prompts", "XUN_OFFER");
+                    break;
+            }
+        }
+
+        private static void ApplyHint(string locId, string hintSheet, string hintKey)
+        {
+            string itemId = RandomizerMod.Instance.ItemPlacements.FirstOrDefault(i => i.Value == locId).Key;
+            if (itemId == null)
+            {
+                return;
+            }
+
+            itemId = itemId.Substring(0, itemId.IndexOf('.'));
+            Item item = RandoResources.Items.FirstOrDefault(i => i.Id == itemId);
+            if (item == null || !item.TryGetNextStage(out ItemStage stage))
+            {
+                return;
+            }
+
+            Lang.Add(hintSheet, hintKey, Lang.Get(stage.Popup.Name, "UI"));
+        }
+
+        private static void EditRandomizedItems(string scene)
+        {
+            Dictionary<GameObject, List<string>> shopItems = new Dictionary<GameObject, List<string>>();
+
+            foreach (KeyValuePair<string, string> pair in RandomizerMod.Instance.ItemPlacements)
+            {
+                string itemId = pair.Key.Substring(0, pair.Key.IndexOf('.'));
+                string locId = pair.Value;
+
+                Item item = RandoResources.Items.FirstOrDefault(i => i.Id == itemId);
+                Location loc = RandoResources.Locations.FirstOrDefault(l => l.Id == locId)
+                    ?? RandoResources.Shops.FirstOrDefault(s => s.Id == locId);
+
+                if (item == null)
+                {
+                    RandomizerMod.Instance.Log("Failed to find item " + itemId + " in resources, skipping");
+                    continue;
+                }
+
+                if (loc == null)
+                {
+                    RandomizerMod.Instance.Log("Failed to find location " + locId + " in resources, skipping");
+                    continue;
+                }
+
+                if (loc.Scene != scene)
+                {
+                    continue;
+                }
+
+                loc.SceneLoaded();
+
+                PlayMakerFSM fsm;
+                if (loc is ObjectLocation objLoc)
+                {
+                    GameObject obj = USceneManager.GetSceneByName(scene).FindGameObject(objLoc.MainObject);
+                    if (obj.name == "Shop Menu")
+                    {
+                        if (!shopItems.TryGetValue(obj, out List<string> objShopItems))
+                        {
+                            objShopItems = new List<string>();
+                            shopItems[obj] = objShopItems;
+                        }
+
+                        objShopItems.Add(pair.Key);
+                        continue;
+                    }
+
+                    fsm = ShinyUtil.GetShiny(obj);
+                }
+                else if (loc is NewLocation newLoc)
+                {
+                    fsm = ShinyUtil.CreateNewShiny(newLoc.X, newLoc.Y);
+                }
+                else
+                {
+                    continue;
+                }
+
+                // Begin patching shiny item fsm from vanilla -> rando
+                ShinyUtil.CancelFling(fsm);
+                ShinyUtil.SetLocationId(fsm, locId);
+                fsm.ForceTransitions("Charm?", "Trink Flash", "Store Key");
+
+                // Replace giving the store key with giving our new item
+                FsmState giveTrinket = fsm.GetState("Store Key");
+                giveTrinket.RemoveActionsOfType<SetPlayerDataBool>();
+                giveTrinket.AddFirstAction(new CollectItem(loc, item));
+
+                // Set the sprite/text on the popup to make it obvious if the above fails
+                giveTrinket.GetActionOfType<GetLanguageString>().convName = "IT BROKE";
+                giveTrinket.GetActionOfType<SetSpriteRendererSprite>().sprite = Sprites.Get("NullTex");
+
+                // Add dialogue box if necessary
+                YNDialogue.AddToShiny(fsm, loc, item);
+            }
+
+            // Shop items
+            foreach (KeyValuePair<GameObject, List<string>> pair in shopItems)
+            {
+                ShopModifier.SetShopItems(pair.Key, pair.Value.ToArray());
             }
         }
     }
