@@ -5,8 +5,6 @@ VisualStudioVersion = 16.0.29411.108
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HollowKnight.1028Randomizer", "HollowKnight.1028Randomizer.csproj", "{0448E767-BD5D-4ABB-AB49-DD5EF8FF6B79}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XmlConverter", "XmlJsonConverter\XmlConverter.csproj", "{E8C99605-DF9C-4B27-804B-228601B8FCA8}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,10 +15,6 @@ Global
 		{0448E767-BD5D-4ABB-AB49-DD5EF8FF6B79}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0448E767-BD5D-4ABB-AB49-DD5EF8FF6B79}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0448E767-BD5D-4ABB-AB49-DD5EF8FF6B79}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E8C99605-DF9C-4B27-804B-228601B8FCA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E8C99605-DF9C-4B27-804B-228601B8FCA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E8C99605-DF9C-4B27-804B-228601B8FCA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E8C99605-DF9C-4B27-804B-228601B8FCA8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

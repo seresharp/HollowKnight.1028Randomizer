@@ -4,8 +4,6 @@ using System.Reflection;
 using System.Text;
 using Randomizer.Util;
 
-using PD = Randomizer.Patches.PlayerData;
-
 namespace Randomizer.Serialized
 {
     public class Item : IReproduceable
@@ -21,7 +19,7 @@ namespace Randomizer.Serialized
 
         public bool TryGetNextStage(out ItemStage stage)
         {
-            if (!PD.instance.itemObtainedCounts.TryGetValue(Id, out int itemCount))
+            if (!RandomizerMod.Instance.ItemObtainedCounts.TryGetValue(Id, out int itemCount))
             {
                 itemCount = 0;
             }
@@ -65,12 +63,12 @@ namespace Randomizer.Serialized
             }
 
             // Increment obtained counter
-            if (!PD.instance.itemObtainedCounts.TryGetValue(Id, out int itemCount))
+            if (!RandomizerMod.Instance.ItemObtainedCounts.TryGetValue(Id, out int itemCount))
             {
                 itemCount = 0;
             }
 
-            PD.instance.itemObtainedCounts[Id] = itemCount + 1;
+            RandomizerMod.Instance.ItemObtainedCounts[Id] = itemCount + 1;
 
             // Item fsm events
             static IEnumerator SendEvents(string[] events)

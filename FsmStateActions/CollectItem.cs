@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using HutongGames.PlayMaker;
+﻿using HutongGames.PlayMaker;
 using HutongGames.PlayMaker.Actions;
 using Randomizer.Serialized;
 using Randomizer.Util;
@@ -24,6 +23,7 @@ namespace Randomizer.FsmStateActions
             // Attempt to give the player the next stage of the item
             if (!Item.TryCollect(out ItemStage stage))
             {
+                Finish();
                 return;
             }
 
@@ -41,15 +41,6 @@ namespace Randomizer.FsmStateActions
             }
 
             Finish();
-        }
-
-        private IEnumerator SendEvents(string[] events)
-        {
-            foreach (string e in events)
-            {
-                PlayMakerFSM.BroadcastEvent(e);
-                yield return null;
-            }
         }
     }
 }

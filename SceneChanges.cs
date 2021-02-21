@@ -9,7 +9,6 @@ using UnityEngine;
 
 using UObject = UnityEngine.Object;
 using USceneManager = UnityEngine.SceneManagement.SceneManager;
-using PD = Randomizer.Patches.PlayerData;
 
 namespace Randomizer
 {
@@ -19,7 +18,7 @@ namespace Randomizer
         {
             Dictionary<GameObject, List<string>> shopItems = new Dictionary<GameObject, List<string>>();
 
-            foreach (KeyValuePair<string, string> pair in PD.instance.itemPlacements)
+            foreach (KeyValuePair<string, string> pair in RandomizerMod.Instance.ItemPlacements)
             {
                 string itemId = pair.Key.Substring(0, pair.Key.IndexOf('.'));
                 string locId = pair.Value;
@@ -30,13 +29,13 @@ namespace Randomizer
 
                 if (item == null)
                 {
-                    Debug.Log("[Randomizer] Failed to find item " + itemId + " in resources, skipping");
+                    RandomizerMod.Instance.Log("Failed to find item " + itemId + " in resources, skipping");
                     continue;
                 }
 
                 if (loc == null)
                 {
-                    Debug.Log("[Randomizer] Failed to find location " + locId + " in resources, skipping");
+                    RandomizerMod.Instance.Log("Failed to find location " + locId + " in resources, skipping");
                     continue;
                 }
 
@@ -45,7 +44,7 @@ namespace Randomizer
                     continue;
                 }
 
-                Debug.Log("[Randomizer] Patching item: " + locId + " -> " + itemId);
+                RandomizerMod.Instance.Log("Patching item: " + locId + " -> " + itemId);
 
                 loc.SceneLoaded();
 
@@ -93,7 +92,7 @@ namespace Randomizer
                 // Add dialogue box if necessary
                 YNDialogue.AddToShiny(fsm, loc, item);
 
-                Debug.Log("[Randomizer] Patched item: " + locId + " -> " + itemId);
+                RandomizerMod.Instance.Log("Patched item: " + locId + " -> " + itemId);
             }
 
             // Shop items
@@ -108,9 +107,9 @@ namespace Randomizer
                     GameObject.Find("Tut_tablet_top").LocateMyFSM("Inspection").GetState("Init").ClearTransitions();
                     break;
                 case "Abyss_06_Core":
-                    if (PD.instance.healthBlue > 0 || PD.instance.joniHealthBlue > 0 || GameManager.instance.entryGateName == "left1")
+                    if (PlayerData.instance.healthBlue > 0 || PlayerData.instance.joniHealthBlue > 0 || GameManager.instance.entryGateName == "left1")
                     {
-                        PD.instance.blueVineDoor = true;
+                        PlayerData.instance.blueVineDoor = true;
                         PlayMakerFSM BlueDoorFSM = GameObject.Find("Blue Door").LocateMyFSM("Control");
                         BlueDoorFSM.GetState("Init").RemoveTransitionsTo("Got Charm");
                     }
@@ -123,7 +122,7 @@ namespace Randomizer
                 case "Crossroads_09":
                     if (GameObject.Find("Randomizer Shiny") is GameObject mawlekShard)
                     {
-                        ShinyUtil.WaitForPDBool(mawlekShard, nameof(PD.killedMawlek)).RunCoroutine();
+                        ShinyUtil.WaitForPDBool(mawlekShard, nameof(PlayerData.killedMawlek)).RunCoroutine();
                     }
 
                     break;
@@ -150,7 +149,7 @@ namespace Randomizer
                     break;
                 case "RestingGrounds_04":
                     // Patch dream nail plaque to look for randomized item
-                    if (!PD.instance.itemPlacements.Any(p => p.Value == "Dream_Nail"))
+                    if (!RandomizerMod.Instance.ItemPlacements.Any(p => p.Value == "Dream_Nail"))
                     {
                         break;
                     }
@@ -172,7 +171,7 @@ namespace Randomizer
                         state.RemoveActionsOfType<PlayerDataBoolTest>();
                         state.AddFirstAction(new ExecuteLambda(() =>
                         {
-                            if (PD.instance.obtainedLocations.Contains("Dream_Nail"))
+                            if (RandomizerMod.Instance.ObtainedLocations.Contains("Dream_Nail"))
                             {
                                 state.Fsm.Event(isTrue);
                             }
@@ -189,59 +188,59 @@ namespace Randomizer
 
                     PlayMakerFSM moth = FSMUtility.LocateFSM(GameObject.Find("Dream Moth"), "Conversation Control");
 
-                    PD.instance.dreamReward1 = true;
+                    PlayerData.instance.dreamReward1 = true;
                     moth.FsmVariables.GetFsmBool("Got Reward 1").Value = true;  //Relic
-                    PD.instance.dreamReward3 = true;
+                    PlayerData.instance.dreamReward3 = true;
                     moth.FsmVariables.GetFsmBool("Got Reward 3").Value = true;  //Pale Ore
-                    PD.instance.dreamReward4 = true;
+                    PlayerData.instance.dreamReward4 = true;
                     moth.FsmVariables.GetFsmBool("Got Reward 4").Value = true;  //Charm
-                    PD.instance.dreamReward5 = true;
+                    PlayerData.instance.dreamReward5 = true;
                     moth.FsmVariables.GetFsmBool("Got Reward 5").Value = true;  //Vessel Fragment
-                    PD.instance.dreamReward6 = true;
+                    PlayerData.instance.dreamReward6 = true;
                     moth.FsmVariables.GetFsmBool("Got Reward 6").Value = true;  //Relic
-                    PD.instance.dreamReward7 = true;
+                    PlayerData.instance.dreamReward7 = true;
                     moth.FsmVariables.GetFsmBool("Got Reward 7").Value = true;  //Mask Shard
-                    PD.instance.dreamReward8 = true;
+                    PlayerData.instance.dreamReward8 = true;
                     moth.FsmVariables.GetFsmBool("Got Reward 8").Value = true;  //Skill
                     break;
                 case "Room_Sly_Storeroom":
                     FsmState slyFinish = FSMUtility.LocateFSM(GameObject.Find("Randomizer Shiny"), "Shiny Control").GetState("Finish");
-                    slyFinish.AddAction(new ExecuteLambda(() => PD.instance.gotSlyCharm = true));
+                    slyFinish.AddAction(new ExecuteLambda(() => PlayerData.instance.gotSlyCharm = true));
                     slyFinish.AddAction(new ExecuteLambda(() => GameManager.instance.ChangeToScene("Town", "door_sly", 0f)));
                     break;
                 case "Ruins1_24":
                     if (GameObject.Find("Randomizer Shiny") is GameObject desolateDive)
                     {
-                        ShinyUtil.WaitForPDBool(desolateDive, nameof(PD.killedMageLord)).RunCoroutine();
+                        ShinyUtil.WaitForPDBool(desolateDive, nameof(PlayerData.killedMageLord)).RunCoroutine();
                     }
 
-                    if (PD.instance.killedMageLord)
+                    if (PlayerData.instance.killedMageLord)
                     {
                         UObject.Destroy(GameObject.Find("Battle Gate (1)"));
                     }
 
                     break;
                 case "Room_Colosseum_01":
-                    PD.instance.colosseumBronzeOpened = true;
-                    PD.instance.colosseumSilverOpened = true;
-                    PD.instance.colosseumGoldOpened = true;
+                    PlayerData.instance.colosseumBronzeOpened = true;
+                    PlayerData.instance.colosseumSilverOpened = true;
+                    PlayerData.instance.colosseumGoldOpened = true;
                     GameObject.Find("Silver Trial Board").LocateMyFSM("Conversation Control").GetState("Hero Anim").ClearTransitions();
                     GameObject.Find("Silver Trial Board").LocateMyFSM("Conversation Control").GetState("Hero Anim").AddTransition("FINISHED", "Box Up YN");
                     GameObject.Find("Gold Trial Board").LocateMyFSM("Conversation Control").GetState("Hero Anim").ClearTransitions();
                     GameObject.Find("Gold Trial Board").LocateMyFSM("Conversation Control").GetState("Hero Anim").AddTransition("FINISHED", "Box Up YN");
                     break;
                 case "Room_Mansion":
-                    if (PD.instance.xunFlowerGiven)
+                    if (PlayerData.instance.xunFlowerGiven)
                     {
-                        PD.instance.xunRewardGiven = true;
+                        PlayerData.instance.xunRewardGiven = true;
                     }
 
                     break;
                 case "Room_Colosseum_Bronze":
-                    GameObject.Find("Colosseum Manager").LocateMyFSM("Geo Pool").GetState("Open Gates").AddFirstAction(new ExecuteLambda(() => PD.instance.colosseumBronzeCompleted = true));
+                    GameObject.Find("Colosseum Manager").LocateMyFSM("Geo Pool").GetState("Open Gates").AddFirstAction(new ExecuteLambda(() => PlayerData.instance.colosseumBronzeCompleted = true));
                     break;
                 case "Room_Colosseum_Silver":
-                    GameObject.Find("Colosseum Manager").LocateMyFSM("Geo Pool").GetState("Open Gates").AddFirstAction(new ExecuteLambda(() => PD.instance.colosseumSilverCompleted = true));
+                    GameObject.Find("Colosseum Manager").LocateMyFSM("Geo Pool").GetState("Open Gates").AddFirstAction(new ExecuteLambda(() => PlayerData.instance.colosseumSilverCompleted = true));
                     break;
                 case "Town":
                     UObject.Destroy(GameObject.Find("Set Sly Basement Closed"));

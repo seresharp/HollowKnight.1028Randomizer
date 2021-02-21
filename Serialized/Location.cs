@@ -6,7 +6,6 @@ using System.Text;
 using Randomizer.Util;
 using UnityEngine;
 
-using PD = Randomizer.Patches.PlayerData;
 using UObject = UnityEngine.Object;
 
 namespace Randomizer.Serialized
@@ -102,7 +101,7 @@ namespace Randomizer.Serialized
         public void Collect()
         {
             // Set obtained
-            PD.instance.obtainedLocations.Add(Id);
+            RandomizerMod.Instance.ObtainedLocations.Add(Id);
 
             // Run events
             static IEnumerator SendEvents(string[] events)

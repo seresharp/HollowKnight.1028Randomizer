@@ -15,7 +15,7 @@ namespace Randomizer
             int seed = Environment.TickCount;
             Random rnd = new Random(seed);
 
-            Debug.Log("[Randomizer] Randomizing with seed " + seed);
+            RandomizerMod.Instance.Log("Randomizing with seed " + seed);
 
             List<string> locs = RandoResources.Locations.Select(l => l.Id).ToList();
             List<string> items = new List<string>();
@@ -34,7 +34,7 @@ namespace Randomizer
                 int itemIdx = rnd.Next(items.Count);
                 itemPlacements[items[itemIdx]] = locs[locIdx];
 
-                Debug.Log("[Randomizer] Placing " + items[itemIdx] + " at " + locs[locIdx]);
+                RandomizerMod.Instance.Log("Placing " + items[itemIdx] + " at " + locs[locIdx]);
 
                 locs.RemoveAt(locIdx);
                 items.RemoveAt(itemIdx);
@@ -57,12 +57,12 @@ namespace Randomizer
                     itemCosts[items[itemIdx]] = rnd.Next(100, 500);
                 }
 
-                Debug.Log("[Randomizer] Placing " + items[itemIdx] + " at " + RandoResources.Shops[shopIdx].Id + " (" + itemCosts[items[itemIdx]] + " geo)");
+                RandomizerMod.Instance.Log("Placing " + items[itemIdx] + " at " + RandoResources.Shops[shopIdx].Id + " (" + itemCosts[items[itemIdx]] + " geo)");
 
                 items.RemoveAt(itemIdx);
             }
 
-            Debug.Log("[Randomizer] All items placed");
+            RandomizerMod.Instance.Log("All items placed");
         }
     }
 }

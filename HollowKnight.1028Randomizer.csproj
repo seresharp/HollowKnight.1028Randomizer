@@ -1,138 +1,158 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{0448E767-BD5D-4ABB-AB49-DD5EF8FF6B79}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Randomizer</RootNamespace>
-    <AssemblyName>Assembly-CSharp.Randomizer.mm</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <LangVersion>latest</LangVersion>
-    <FileAlignment>512</FileAlignment>
-    <Deterministic>true</Deterministic>
+    <AssemblyName>Randomizer</AssemblyName>
+    <OutputType>Library</OutputType>
+    <TargetFramework>net35</TargetFramework>
+    <LangVersion>9.0</LangVersion>
+    <AssemblyTitle>HK 1028 Randomizer</AssemblyTitle>
+    <Product>HK 1028 Randomizer</Product>
+    <Copyright>MIT</Copyright>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <LangVersion>8.0</LangVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <LangVersion>8.0</LangVersion>
-  </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject>
-    </StartupObject>
-  </PropertyGroup>
+  
   <ItemGroup>
-    <Reference Include="Assembly-CSharp">
-      <HintPath>Vanilla\Assembly-CSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.Cecil, Version=0.10.4.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e, processorArchitecture=MSIL">
-      <HintPath>packages\Mono.Cecil.0.10.4\lib\net35\Mono.Cecil.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.Cecil.Mdb, Version=0.10.4.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e, processorArchitecture=MSIL">
-      <HintPath>packages\Mono.Cecil.0.10.4\lib\net35\Mono.Cecil.Mdb.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.Cecil.Pdb, Version=0.10.4.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e, processorArchitecture=MSIL">
-      <HintPath>packages\Mono.Cecil.0.10.4\lib\net35\Mono.Cecil.Pdb.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.Cecil.Rocks, Version=0.10.4.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e, processorArchitecture=MSIL">
-      <HintPath>packages\Mono.Cecil.0.10.4\lib\net35\Mono.Cecil.Rocks.dll</HintPath>
-    </Reference>
-    <Reference Include="MonoMod, Version=20.8.3.5, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\MonoMod.20.8.3.5\lib\net35\MonoMod.exe</HintPath>
-    </Reference>
-    <Reference Include="MonoMod.RuntimeDetour, Version=20.8.3.5, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\MonoMod.RuntimeDetour.20.8.3.5\lib\net35\MonoMod.RuntimeDetour.dll</HintPath>
-    </Reference>
-    <Reference Include="MonoMod.Utils, Version=20.8.3.5, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\MonoMod.Utils.20.8.3.5\lib\net35\MonoMod.Utils.dll</HintPath>
-    </Reference>
-    <Reference Include="PlayMaker">
-      <HintPath>Vanilla\PlayMaker.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-    <Reference Include="UnityEngine">
-      <HintPath>Vanilla\UnityEngine.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UI">
-      <HintPath>Vanilla\UnityEngine.UI.dll</HintPath>
-    </Reference>
+    <None Remove=".gitignore" />
+    <None Remove="Resources\Charms\1.png" />
+    <None Remove="Resources\Charms\10.png" />
+    <None Remove="Resources\Charms\11.png" />
+    <None Remove="Resources\Charms\12.png" />
+    <None Remove="Resources\Charms\13.png" />
+    <None Remove="Resources\Charms\14.png" />
+    <None Remove="Resources\Charms\15.png" />
+    <None Remove="Resources\Charms\16.png" />
+    <None Remove="Resources\Charms\17.png" />
+    <None Remove="Resources\Charms\18.png" />
+    <None Remove="Resources\Charms\19.png" />
+    <None Remove="Resources\Charms\2.png" />
+    <None Remove="Resources\Charms\20.png" />
+    <None Remove="Resources\Charms\21.png" />
+    <None Remove="Resources\Charms\22.png" />
+    <None Remove="Resources\Charms\23.png" />
+    <None Remove="Resources\Charms\23_G.png" />
+    <None Remove="Resources\Charms\24.png" />
+    <None Remove="Resources\Charms\24_G.png" />
+    <None Remove="Resources\Charms\25.png" />
+    <None Remove="Resources\Charms\25_G.png" />
+    <None Remove="Resources\Charms\26.png" />
+    <None Remove="Resources\Charms\27.png" />
+    <None Remove="Resources\Charms\28.png" />
+    <None Remove="Resources\Charms\29.png" />
+    <None Remove="Resources\Charms\3.png" />
+    <None Remove="Resources\Charms\30.png" />
+    <None Remove="Resources\Charms\31.png" />
+    <None Remove="Resources\Charms\32.png" />
+    <None Remove="Resources\Charms\33.png" />
+    <None Remove="Resources\Charms\34.png" />
+    <None Remove="Resources\Charms\35.png" />
+    <None Remove="Resources\Charms\36.png" />
+    <None Remove="Resources\Charms\36_L.png" />
+    <None Remove="Resources\Charms\36_R.png" />
+    <None Remove="Resources\Charms\36_Void.png" />
+    <None Remove="Resources\Charms\37.png" />
+    <None Remove="Resources\Charms\38.png" />
+    <None Remove="Resources\Charms\39.png" />
+    <None Remove="Resources\Charms\4.png" />
+    <None Remove="Resources\Charms\40.png" />
+    <None Remove="Resources\Charms\5.png" />
+    <None Remove="Resources\Charms\6.png" />
+    <None Remove="Resources\Charms\7.png" />
+    <None Remove="Resources\Charms\8.png" />
+    <None Remove="Resources\Charms\9.png" />
+    <None Remove="Resources\Items\CityKey.png" />
+    <None Remove="Resources\Items\DreamNail1.png" />
+    <None Remove="Resources\Items\DreamNail2.png" />
+    <None Remove="Resources\Items\ElegantKey.png" />
+    <None Remove="Resources\Items\KingsBrand.png" />
+    <None Remove="Resources\Items\Lantern.png" />
+    <None Remove="Resources\Items\LoveKey.png" />
+    <None Remove="Resources\Items\MapQuill.png" />
+    <None Remove="Resources\Items\PaleOre.png" />
+    <None Remove="Resources\Items\RancidEgg.png" />
+    <None Remove="Resources\Items\ShopkeepersKey.png" />
+    <None Remove="Resources\Items\SimpleKey.png" />
+    <None Remove="Resources\Items\TramPass.png" />
+    <None Remove="Resources\NullTex.png" />
+    <None Remove="Resources\Prompts\36_L.png" />
+    <None Remove="Resources\Prompts\36_R.png" />
+    <None Remove="Resources\Prompts\36_Void.png" />
+    <None Remove="Resources\Prompts\CollectorsMap.png" />
+    <None Remove="Resources\Prompts\CycloneSlash.png" />
+    <None Remove="Resources\Prompts\Dash.png" />
+    <None Remove="Resources\Prompts\DashSlash.png" />
+    <None Remove="Resources\Prompts\Dream Gate.png" />
+    <None Remove="Resources\Prompts\Dreamer.png" />
+    <None Remove="Resources\Prompts\Dreamnail.png" />
+    <None Remove="Resources\Prompts\Fireball1.png" />
+    <None Remove="Resources\Prompts\Fireball2.png" />
+    <None Remove="Resources\Prompts\Focus.png" />
+    <None Remove="Resources\Prompts\Godfinder.png" />
+    <None Remove="Resources\Prompts\GreatSlash.png" />
+    <None Remove="Resources\Prompts\Herrah.png" />
+    <None Remove="Resources\Prompts\Isma.png" />
+    <None Remove="Resources\Prompts\Kingsbrand.png" />
+    <None Remove="Resources\Prompts\Lurien.png" />
+    <None Remove="Resources\Prompts\Monomon.png" />
+    <None Remove="Resources\Prompts\Quake1.png" />
+    <None Remove="Resources\Prompts\Quake2.png" />
+    <None Remove="Resources\Prompts\Scream1.png" />
+    <None Remove="Resources\Prompts\Scream2.png" />
+    <None Remove="Resources\Prompts\Shadowdash.png" />
+    <None Remove="Resources\Prompts\Superdash.png" />
+    <None Remove="Resources\Prompts\Walljump.png" />
+    <None Remove="Resources\Prompts\Wings.png" />
+    <None Remove="Resources\Prompts\WorldSense.png" />
+    <None Remove="Resources\ShopIcons\ArcaneEgg.png" />
+    <None Remove="Resources\ShopIcons\CharmNotch.png" />
+    <None Remove="Resources\ShopIcons\CityKey.png" />
+    <None Remove="Resources\ShopIcons\CollectorsMap.png" />
+    <None Remove="Resources\ShopIcons\CycloneSlash.png" />
+    <None Remove="Resources\ShopIcons\Dash.png" />
+    <None Remove="Resources\ShopIcons\DashSlash.png" />
+    <None Remove="Resources\ShopIcons\Dreamnail.png" />
+    <None Remove="Resources\ShopIcons\ElegantKey.png" />
+    <None Remove="Resources\ShopIcons\Essence.png" />
+    <None Remove="Resources\ShopIcons\Fireball1.png" />
+    <None Remove="Resources\ShopIcons\Fireball2.png" />
+    <None Remove="Resources\ShopIcons\Flame.png" />
+    <None Remove="Resources\ShopIcons\Focus.png" />
+    <None Remove="Resources\ShopIcons\Geo.png" />
+    <None Remove="Resources\ShopIcons\Godfinder.png" />
+    <None Remove="Resources\ShopIcons\GreatSlash.png" />
+    <None Remove="Resources\ShopIcons\Grub.png" />
+    <None Remove="Resources\ShopIcons\HallownestSeal.png" />
+    <None Remove="Resources\ShopIcons\Isma.png" />
+    <None Remove="Resources\ShopIcons\KingsBrand.png" />
+    <None Remove="Resources\ShopIcons\KingsIdol.png" />
+    <None Remove="Resources\ShopIcons\Lantern.png" />
+    <None Remove="Resources\ShopIcons\Lifeblood.png" />
+    <None Remove="Resources\ShopIcons\LoveKey.png" />
+    <None Remove="Resources\ShopIcons\Map.png" />
+    <None Remove="Resources\ShopIcons\MaskShard.png" />
+    <None Remove="Resources\ShopIcons\PaleOre.png" />
+    <None Remove="Resources\ShopIcons\Quake1.png" />
+    <None Remove="Resources\ShopIcons\Quake2.png" />
+    <None Remove="Resources\ShopIcons\Quill.png" />
+    <None Remove="Resources\ShopIcons\RancidEgg.png" />
+    <None Remove="Resources\ShopIcons\Scream1.png" />
+    <None Remove="Resources\ShopIcons\Scream2.png" />
+    <None Remove="Resources\ShopIcons\Shadowdash.png" />
+    <None Remove="Resources\ShopIcons\ShopkeepersKey.png" />
+    <None Remove="Resources\ShopIcons\SimpleKey.png" />
+    <None Remove="Resources\ShopIcons\Soul.png" />
+    <None Remove="Resources\ShopIcons\StagPin.png" />
+    <None Remove="Resources\ShopIcons\Superdash.png" />
+    <None Remove="Resources\ShopIcons\TramPass.png" />
+    <None Remove="Resources\ShopIcons\VesselFragment.png" />
+    <None Remove="Resources\ShopIcons\Walljump.png" />
+    <None Remove="Resources\ShopIcons\WanderersJournal.png" />
+    <None Remove="Resources\ShopIcons\Wings.png" />
+    <None Remove="Resources\ShopIcons\WorldSense.png" />
+    <None Remove="Resources\UI\egg.png" />
+    <None Remove="Resources\UI\logo.png" />
+    <None Remove="Resources\UI\logo2.png" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Components\BigItemPopup.cs" />
-    <Compile Include="FsmStateActions\CheckLocationObtained.cs" />
-    <Compile Include="FsmStateActions\CollectItem.cs" />
-    <Compile Include="FsmStateActions\ExecuteLambda.cs" />
-    <Compile Include="ItemCallbacks.cs" />
-    <Compile Include="LocationCallbacks.cs" />
-    <Compile Include="ObjectCache.cs" />
-    <Compile Include="Patches\FlingObject.cs" />
-    <Compile Include="Patches\GameManager.cs" />
-    <Compile Include="Patches\Language.cs" />
-    <Compile Include="Patches\PlayerData.cs" />
-    <Compile Include="Patches\SaveGameData.cs" />
-    <Compile Include="Patches\StartManager.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Randomization.cs" />
-    <Compile Include="RandoResources\Items.cs" />
-    <Compile Include="RandoResources\Locations.cs" />
-    <Compile Include="RandoResources\Shops.cs" />
-    <Compile Include="SceneChanges.cs" />
-    <Compile Include="Serialized\IReproduceable.cs" />
-    <Compile Include="Serialized\Item.cs" />
-    <Compile Include="Serialized\Location.cs" />
-    <Compile Include="Serialized\PlayerField.cs" />
-    <Compile Include="Serialized\SerializableDictionary.cs" />
-    <Compile Include="Serialized\SerializableIntDictionary.cs" />
-    <Compile Include="Serialized\SerializableStringDictionary.cs" />
-    <Compile Include="ShopModifier.cs" />
-    <Compile Include="Util\CavasUtil.cs" />
-    <Compile Include="Util\IEnumeratorExtensions.cs" />
-    <Compile Include="Util\Fonts.cs" />
-    <Compile Include="Util\Lang.cs" />
-    <Compile Include="Util\PlayMakerExtensions.cs" />
-    <Compile Include="Util\Ref.cs" />
-    <Compile Include="Util\SceneExtensions.cs" />
-    <Compile Include="Util\ShinyUtil.cs" />
-    <Compile Include="Util\Sprites.cs" />
-    <Compile Include="YNDialogue.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\NullTex.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\Anim\BigItemFleur\0.png" />
-    <EmbeddedResource Include="Resources\Anim\BigItemFleur\1.png" />
-    <EmbeddedResource Include="Resources\Anim\BigItemFleur\2.png" />
-    <EmbeddedResource Include="Resources\Anim\BigItemFleur\3.png" />
-    <EmbeddedResource Include="Resources\Anim\BigItemFleur\4.png" />
-    <EmbeddedResource Include="Resources\Anim\BigItemFleur\5.png" />
-    <EmbeddedResource Include="Resources\Anim\BigItemFleur\6.png" />
-    <EmbeddedResource Include="Resources\Anim\BigItemFleur\7.png" />
-    <EmbeddedResource Include="Resources\Anim\BigItemFleur\8.png" />
     <EmbeddedResource Include="Resources\Charms\1.png" />
     <EmbeddedResource Include="Resources\Charms\10.png" />
     <EmbeddedResource Include="Resources\Charms\11.png" />
@@ -192,6 +212,7 @@
     <EmbeddedResource Include="Resources\Items\ShopkeepersKey.png" />
     <EmbeddedResource Include="Resources\Items\SimpleKey.png" />
     <EmbeddedResource Include="Resources\Items\TramPass.png" />
+    <EmbeddedResource Include="Resources\NullTex.png" />
     <EmbeddedResource Include="Resources\Prompts\36_L.png" />
     <EmbeddedResource Include="Resources\Prompts\36_R.png" />
     <EmbeddedResource Include="Resources\Prompts\36_Void.png" />
@@ -271,5 +292,16 @@
     <EmbeddedResource Include="Resources\UI\logo.png" />
     <EmbeddedResource Include="Resources\UI\logo2.png" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  
+  <ItemGroup>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>..\..\References1028\Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="PlayMaker">
+      <HintPath>..\..\References1028\PlayMaker.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>..\..\References1028\UnityEngine.dll</HintPath>
+    </Reference>
+  </ItemGroup>
 </Project>

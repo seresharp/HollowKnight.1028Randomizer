@@ -27,7 +27,7 @@ namespace Randomizer
             new ObjectLocation("Howling_Wraiths", "Room_Fungus_Shaman", new string[0], new string[0], new string[0], new PlayerField<int>[0], new PlayerField<bool>[0], new string[0], "Scream Item"),
             new ObjectLocation("Abyss_Shriek", "Abyss_12", new string[0], new string[0], new string[0], new PlayerField<int>[] { new PlayerField<int>("screamLevel", 1, false) }, new PlayerField<bool>[0], new string[0], "Scream 2 Get"),
             new ObjectLocation("Cyclone_Slash", "Room_nailmaster", new string[0], new string[0], new string[0], new PlayerField<int>[0], new PlayerField<bool>[0], new string[0], "NM Mato NPC"),
-            new ObjectLocation("Dash_Slash", "Room_nailmaster_03", new string[0], new string[0], new string[0], new PlayerField<int>[0], new PlayerField<bool>[0], new string[0], "NM Oro NPC"),
+            new ObjectLocation("Dash_Slash", "Room_nailmaster_03", new string[0], new string[0], new string[0], new PlayerField<int>[] { new PlayerField<int>("geo", 800, false) }, new PlayerField<bool>[0], new string[0], "NM Oro NPC"),
             new ObjectLocation("Great_Slash", "Room_nailmaster_02", new string[0], new string[0], new string[0], new PlayerField<int>[0], new PlayerField<bool>[0], new string[0], "NM Sheo NPC"),
             new NewLocation("Grubsong", "Crossroads_38", new string[] { "Reward 10" }, new string[0], new string[0], new PlayerField<int>[] { new PlayerField<int>("grubsCollected", 5, false) }, new PlayerField<bool>[0], new string[0], 51f, 4f),
             new ObjectLocation("Baldur_Shell", "Fungus1_28", new string[0], new string[0], new string[0], new PlayerField<int>[0], new PlayerField<bool>[0], new string[0], "Shiny Item"),

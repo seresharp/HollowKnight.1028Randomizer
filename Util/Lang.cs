@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
-using HKLang = Randomizer.Patches.Language;
+using HKLang = Language.Language;
 
 namespace Randomizer.Util
 {
     public static class Lang
     {
-        private static readonly Dictionary<KeyValuePair<string, string>, string> Overrides
-            = new Dictionary<KeyValuePair<string, string>, string>();
+        public static Func<string, string, string> OrigLangGet { get; set; }
+
+        private static readonly Dictionary<(string, string), string> Overrides = new();
 
         public static void Add(string sheet, string key, string text)
         {
@@ -17,15 +18,15 @@ namespace Randomizer.Util
             if (string.IsNullOrEmpty(key)) throw new ArgumentNullException(nameof(key));
             if (text is null) throw new ArgumentNullException(nameof(text));
 
-            Overrides[new KeyValuePair<string, string>(sheet, key)] = text;
+            Overrides[(sheet, key)] = text;
         }
 
-        public static string Get(string sheet, string key)
+        public static string Get(string key, string sheet)
         {
             if (string.IsNullOrEmpty(sheet)) throw new ArgumentNullException(nameof(sheet));
             if (string.IsNullOrEmpty(key)) throw new ArgumentNullException(nameof(key));
 
-            if (!Overrides.TryGetValue(new KeyValuePair<string, string>(sheet, key), out string text))
+            if (!Overrides.TryGetValue((sheet, key), out string text))
             {
                 if (sheet == "Prices" && int.TryParse(key, out int cost))
                 {
@@ -33,29 +34,19 @@ namespace Randomizer.Util
                 }
                 else if (sheet == "UI" && key.StartsWith("RANDOMIZER_NAME_ESSENCE_"))
                 {
-                    text = key.Replace("RANDOMIZER_NAME_ESSENCE_", "") + " " + Get(sheet, "RANDOMIZER_NAME_ESSENCE");
+                    text = key.Replace("RANDOMIZER_NAME_ESSENCE_", "") + " " + Get("RANDOMIZER_NAME_ESSENCE", sheet);
                 }
                 else
                 {
-                    text = HKLang.orig_Get(key, sheet);
+                    text = OrigLangGet(key, sheet);
                 }
             }
 
             return text.Replace("<br>", "\n");
         }
 
-        public static string Get(string sheetDotKey)
-        {
-            if (sheetDotKey is null) throw new ArgumentNullException(nameof(sheetDotKey));
-
-            string[] split = sheetDotKey.Split('.');
-            if (split.Length != 2) throw new InvalidOperationException($"Input {sheetDotKey} is not of the form 'sheetTitle.key'");
-
-            return Get(split[0], split[1]);
-        }
-
         public static bool Has(string sheet, string key)
-            => Overrides.ContainsKey(new KeyValuePair<string, string>(sheet, key)) ? true : HKLang.Has(key, sheet);
+            => Overrides.ContainsKey((sheet, key)) || HKLang.Has(key, sheet);
 
         [CompilerGenerated]
         static Lang()

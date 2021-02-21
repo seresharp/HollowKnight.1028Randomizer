@@ -119,7 +119,7 @@ namespace Randomizer
 
         private static string GetDialogueString(Location loc, Item item)
         {
-            string itemName = Lang.Get("UI", item.Stages[0].Popup.Name);
+            string itemName = Lang.Get(item.Stages[0].Popup.Name, "UI");
             if (item.Stages.Length > 1)
             {
                 itemName = "Additive " + itemName;
@@ -138,7 +138,7 @@ namespace Randomizer
 
                 t += reqItem == null
                     ? pf.FieldName
-                    : Lang.Get("UI", reqItem.Popup.Name);
+                    : Lang.Get(reqItem.Popup.Name, "UI");
 
                 reqText.Add(t);
             }
@@ -175,7 +175,7 @@ namespace Randomizer
 
                         t = "Have " + (reqItem == null
                             ? pf.Value + " " + pf.FieldName
-                            : Lang.Get("UI", reqItem.Popup.Name));
+                            : Lang.Get(reqItem.Popup.Name, "UI"));
 
                         break;
                 }

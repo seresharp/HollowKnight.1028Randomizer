@@ -1,7 +1,5 @@
 ﻿using HutongGames.PlayMaker;
 
-using PD = Randomizer.Patches.PlayerData;
-
 namespace Randomizer.FsmStateActions
 {
     internal class CheckLocationObtained : FsmStateAction
@@ -19,7 +17,7 @@ namespace Randomizer.FsmStateActions
 
         public override void OnEnter()
         {
-            if (PD.instance.obtainedLocations.Contains(LocId))
+            if (RandomizerMod.Instance.ObtainedLocations.Contains(LocId))
             {
                 if (TrueEvent != null)
                 {

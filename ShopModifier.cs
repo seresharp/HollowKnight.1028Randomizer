@@ -4,7 +4,6 @@ using Randomizer.Serialized;
 using Randomizer.Util;
 using UnityEngine;
 
-using PD = Randomizer.Patches.PlayerData;
 using UObject = UnityEngine.Object;
 
 namespace Randomizer
@@ -33,12 +32,12 @@ namespace Randomizer
 
                 // Apply all the stored values
                 ShopItemStats stats = newItemObj.GetComponent<ShopItemStats>();
-                stats.playerDataBoolName = PD.instance.itemPlacements[itemId] + "." + itemId;
+                stats.playerDataBoolName = RandomizerMod.Instance.ItemPlacements[itemId] + "." + itemId;
                 stats.nameConvo = stage.Shop.Name;
                 stats.descConvo = stage.Shop.Description;
-                stats.requiredPlayerDataBool = PD.instance.itemPlacements[itemId] == "Sly_(Key)" ? "hasSlykey" : "";
+                stats.requiredPlayerDataBool = RandomizerMod.Instance.ItemPlacements[itemId] == "Sly_(Key)" ? "hasSlykey" : "";
                 stats.notchCostBool = string.Empty;
-                stats.cost = PD.instance.itemCosts[itemId];
+                stats.cost = RandomizerMod.Instance.ItemCosts[itemId];
 
                 // Need to set all these to make sure the item doesn't break in one of various ways
                 stats.priceConvo = stats.cost.ToString();
@@ -51,7 +50,7 @@ namespace Randomizer
                     Sprites.Get(stage.Shop.Sprite);
 
                 newStock.Add(newItemObj);
-                Debug.Log("[Randomizer] " + itemId);
+                RandomizerMod.Instance.Log("" + itemId);
             }
 
             foreach (GameObject item in shop.stock)
