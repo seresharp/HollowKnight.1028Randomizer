@@ -28,11 +28,7 @@ namespace Randomizer.Util
 
             if (!Overrides.TryGetValue((sheet, key), out string text))
             {
-                if (sheet == "Prices" && int.TryParse(key, out int cost))
-                {
-                    text = cost.ToString();
-                }
-                else if (sheet == "UI" && key.StartsWith("RANDOMIZER_NAME_ESSENCE_"))
+                if (sheet == "UI" && key.StartsWith("RANDOMIZER_NAME_ESSENCE_"))
                 {
                     text = key.Replace("RANDOMIZER_NAME_ESSENCE_", "") + " " + Get("RANDOMIZER_NAME_ESSENCE", sheet);
                 }

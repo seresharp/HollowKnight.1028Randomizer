@@ -114,6 +114,15 @@ namespace Randomizer
                 return false;
             }
 
+            if (boolName.StartsWith("CheckHasRequired."))
+            {
+                string locId = boolName.Substring(boolName.IndexOf('.') + 1);
+                Location loc = RandoResources.Locations.FirstOrDefault(l => l.Id == locId)
+                    ?? RandoResources.Shops.FirstOrDefault(l => l.Id == locId);
+
+                return loc?.HasRequired() ?? false;
+            }
+
             foreach (Location shop in RandoResources.Shops)
             {
                 if (!boolName.StartsWith(shop.Id + "."))

@@ -14,11 +14,11 @@ namespace Randomizer
         {
             ShopMenuStock shop = shopObj.GetComponent<ShopMenuStock>();
             GameObject itemPrefab = UObject.Instantiate(shop.stock[0]);
+            itemPrefab.transform.SetPosition2D(-1000, -1000);
 
             // Remove all charm type items from the store
             List<GameObject> newStock = new List<GameObject>();
 
-            Debug.Log($"[Randomizer] New shop contents ({shopObj.scene.name}) - ");
             foreach (string itemId in items)
             {
                 Item item = RandoResources.Items.First(i => i.Id == itemId.Substring(0, itemId.IndexOf('.')));
@@ -35,12 +35,12 @@ namespace Randomizer
                 stats.playerDataBoolName = RandomizerMod.Instance.ItemPlacements[itemId] + "." + itemId;
                 stats.nameConvo = stage.Shop.Name;
                 stats.descConvo = stage.Shop.Description;
-                stats.requiredPlayerDataBool = RandomizerMod.Instance.ItemPlacements[itemId] == "Sly_(Key)" ? "hasSlykey" : "";
+                stats.requiredPlayerDataBool = "CheckHasRequired." + RandomizerMod.Instance.ItemPlacements[itemId];
                 stats.notchCostBool = string.Empty;
                 stats.cost = RandomizerMod.Instance.ItemCosts[itemId];
 
                 // Need to set all these to make sure the item doesn't break in one of various ways
-                stats.priceConvo = stats.cost.ToString();
+                stats.priceConvo = "";
                 stats.specialType = 2;
                 stats.charmsRequired = 0;
                 stats.relicNumber = 0;
@@ -49,9 +49,12 @@ namespace Randomizer
                 stats.transform.Find("Item Sprite").gameObject.GetComponent<SpriteRenderer>().sprite =
                     Sprites.Get(stage.Shop.Sprite);
 
+                UObject.Destroy(stats.transform.Find("Item Sprite").gameObject.LocateMyFSM("get_charm_sprite"));
+
                 newStock.Add(newItemObj);
-                RandomizerMod.Instance.Log("" + itemId);
             }
+
+            UObject.Destroy(itemPrefab);
 
             foreach (GameObject item in shop.stock)
             {
