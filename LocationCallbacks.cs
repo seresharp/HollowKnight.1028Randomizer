@@ -5,6 +5,7 @@ using Randomizer.Util;
 using UnityEngine;
 
 using UObject = UnityEngine.Object;
+using USceneManager = UnityEngine.SceneManagement.SceneManager;
 
 namespace Randomizer
 {
@@ -29,6 +30,17 @@ namespace Randomizer
                         fsm.GetState("Current Location Check").RemoveActionsOfType<IntCompare>();
                     }
                 }
+            }
+        }
+
+        public static void RemoveDreamOrbEssence(Location location)
+        {
+            foreach (PlayMakerFSM dreamOrb in USceneManager.GetSceneByName(location.Scene)
+                .GetRootGameObjects()
+                .SelectMany(obj => obj.GetComponentsInChildren<PlayMakerFSM>())
+                .Where(fsm => fsm.FsmName == "Control" && fsm.gameObject.name.StartsWith("Dream Plant Orb")))
+            {
+                dreamOrb.GetState("Collect").RemoveActionsOfType<IncrementPlayerDataInt>();
             }
         }
 
