@@ -89,13 +89,6 @@ namespace Randomizer
             {
                 ItemCosts.AddRange(JsonUtility.FromJson<SerializableIntDictionary>(itemCostsJson));
             }
-
-            Log("Loaded save");
-            Log("Obtained items:");
-            foreach (string str in ObtainedLocations)
-            {
-                Log(str + " - " + ItemPlacements.First(i => i.Value == str).Key);
-            }
         }
 
         public override List<(string, string, string)> GetPreloads()
@@ -174,6 +167,7 @@ namespace Randomizer
             try
             {
                 SceneChanges.PatchScene(self.sceneName);
+                QoL.PatchScene(self.sceneName);
             }
             catch (Exception e)
             {

@@ -97,5 +97,63 @@ namespace Randomizer.Util
                 state.AddTransition("FINISHED", stateNames[i + 1]);
             }
         }
+
+        public static void Log(this PlayMakerFSM self)
+        {
+            RandomizerMod.Instance.Log("============================================================");
+
+            LogWithTabbing(self.name + " - " + self.FsmName, 0);
+            foreach (FsmTransition trans in self.FsmGlobalTransitions)
+            {
+                LogWithTabbing(trans.EventName + " -> " + trans.ToState, 1);
+            }
+
+            foreach (FsmState state in self.FsmStates)
+            {
+                LogWithTabbing(state.Name, 1);
+                foreach (FsmTransition trans in state.Transitions)
+                {
+                    LogWithTabbing(trans.EventName + " -> " + trans.ToState, 2);
+                }
+
+                foreach (FsmStateAction action in state.Actions)
+                {
+                    LogWithTabbing(action.GetType().Name, 2);
+                    LogFields(action, 3);
+                }
+            }
+
+            RandomizerMod.Instance.Log("============================================================");
+
+            static void LogWithTabbing(string msg, int tabbing)
+                => RandomizerMod.Instance.Log(new string(' ', tabbing * 4) + msg);
+
+            static void LogFields(object obj, int tabbing)
+            {
+                foreach (FieldInfo field in obj.GetType().GetFields())
+                {
+                    object fieldVal = field.GetValue(obj);
+
+                    switch (fieldVal)
+                    {
+                        case FsmEventTarget target:
+                            LogWithTabbing($"{field.FieldType.Name} {field.Name} = ", tabbing);
+                            LogFields(target, tabbing + 1);
+                            continue;
+                    }
+
+                    string fieldText = fieldVal switch
+                    {
+                        null => "null",
+                        FsmEvent e => e.Name,
+                        FsmOwnerDefault od => od.GameObject?.ToString() ?? "null",
+                        NamedVariable v => v.RawValue + " (" + v.VariableType + " " + v.GetDisplayName() + ")",
+                        not null => fieldVal.ToString()
+                    };
+
+                    LogWithTabbing($"{field.FieldType.Name} {field.Name} = {fieldText}", tabbing);
+                }
+            }
+        }
     }
 }
