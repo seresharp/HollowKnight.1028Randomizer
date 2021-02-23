@@ -19,6 +19,8 @@ namespace Randomizer
         public readonly SerializableIntDictionary ItemObtainedCounts = new();
         public readonly SerializableIntDictionary ItemCosts = new();
 
+        public override string Version => "0.0.3";
+
         public RandomizerMod() : base("Randomizer Mod")
         {
             Instance = this;
